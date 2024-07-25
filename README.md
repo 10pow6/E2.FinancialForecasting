@@ -6,6 +6,10 @@ This script produces basic financial modelling insights on E2's profitability.
 # Why is this useful:
 Forming insights about company health.
 
+# Development Environment
+1) Python 3.11.0
+2) Windows 11
+
 # Setup & Run Instructions
 1) Install Python 3.11.0
 2) [optional] Grab new Windows Terminal (https://apps.microsoft.com/detail/9n0dx20hk701?hl=en-gb&gl=GB)
@@ -16,5 +20,5 @@ python -m venv venv
 source
 pip install -r requirements.txt
 ```
-5) Run either via `python main.py` or `wt_run.py`
+5) Run either via `python main.py` or `wt_run.py` if you have new Windows Terminal
 
