@@ -1,0 +1,32 @@
+Landing #profile-title {
+    background: $primary;
+}
+Landing #history-title {
+    background: $primary;
+}
+Landing #actions-title {
+    background: $primary;
+}
+
+Landing #profile RadioSet {
+    background: $primary-background;
+    width:100%;
+}
+
+Landing #history {
+    width:100%;
+}
+
+Landing #start-forecast {
+    align: center top;
+    background: $panel;
+}
+
+Landing #start-forecast Button {
+    width: 100%;
+}
+
+Landing {
+    layout: grid;
+    grid-size: 2;
+}
