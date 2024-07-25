@@ -23,39 +23,31 @@ class Profile(Widget):
         print(event.pressed.label)
         print(event.radio_set.pressed_index)
 
-
-class Snapshot(ListItem):
-    file_name = ""
-
-    def __init__( self, value: str  ) -> None:
-        """Initialise the input."""
+    def on_mount(self) -> None:
+        # Get config profiles
+        path = CONFIG_DIR
+        dir_list = os.listdir(path)
+        for file in dir_list:
+            self.configs.append(file)    
         
-        self.file_name = value
-        super().__init__()
-
-    def compose(self) -> ComposeResult:
-        yield Label(self.file_name)
-
+        self.mutate_reactive(Profile.configs)
 
 class Forecast(Widget):
-    snapshots = ListView()
+    snapshots: reactive[list[ListItem]] = reactive(list, recompose=True) 
     def compose(self) -> ComposeResult:
-        yield self.snapshots
+        yield ListView( *self.snapshots )
 
     def on_mount(self) -> None:
         # Get config profiles
         path = SNAPSHOTS_DIR
         dir_list = os.listdir(path)
-        self.snapshots.append( Snapshot("Create new..."))   
+        self.snapshots.append( ListItem(Label("Create new")) )
         for file in dir_list:
-            self.snapshots.append( Snapshot(file) )   
+            self.snapshots.append( ListItem(Label(file))  )
+        self.mutate_reactive(Forecast.snapshots)
 
 
 class Landing(Screen):
-    
-    configs: reactive[list[str]] = reactive(list, recompose=True)
-
-
     def compose(self) -> ComposeResult:
         """Create child widgets for the app."""
         yield Header()
@@ -63,7 +55,7 @@ class Landing(Screen):
         with Vertical():
             with Container():
                 yield Static(" Profile ", id="profile-title")
-                yield Profile(id="profile").data_bind(Landing.configs)
+                yield Profile(id="profile")
             with Container():
                 yield Static(" Forecast ", id="history-title")
                 yield Forecast(id="history")
@@ -77,11 +69,3 @@ class Landing(Screen):
         yield Footer()
         
         
-    def on_mount(self) -> None:
-        # Get config profiles
-        path = CONFIG_DIR
-        dir_list = os.listdir(path)
-        for file in dir_list:
-            self.configs.append(file)    
-        
-        self.mutate_reactive(Profile.configs)
