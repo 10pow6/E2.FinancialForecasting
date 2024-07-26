@@ -4,8 +4,8 @@ from textual.widgets import Header, Footer, Static, RadioButton, RadioSet, ListV
 from textual.containers import Container, Vertical
 from textual.reactive import reactive
 from textual.widget import Widget
-from textual.widgets import Placeholder
 
+from screens import Loading
 import os
 
 CONFIG_DIR="configs"
@@ -76,4 +76,7 @@ class Landing(Screen):
 
         if button_id == "button-quit":
             self.app.exit()
+        if button_id == "button-generate-new":
+            self.app.push_screen(Loading())
+
         

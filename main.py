@@ -1,6 +1,7 @@
 from textual.app import App, ComposeResult
 from textual.widgets import Header, Footer
-from screens.landing import Landing
+
+from screens import Landing
 
 class ForecastApp(App):
     """A Textual app to forecast E2 Financials."""
@@ -17,8 +18,7 @@ class ForecastApp(App):
         self.dark = not self.dark
 
     def on_mount(self) -> None:
-        self.install_screen(Landing(), name="landing")
-        self.push_screen('landing')
+        self.push_screen(Landing())
 
 if __name__ == "__main__":
     app = ForecastApp()

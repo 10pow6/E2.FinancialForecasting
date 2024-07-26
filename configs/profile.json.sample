@@ -1,0 +1,62 @@
+{
+    "API_CONFIG": {
+        "HEADERS": {
+            "cookie": "", 
+            "x-csrftoken": "", 
+            "referer": "https://app.earth2.io/",
+            "accept": "application/json",
+            "accept-encoding": "gzip, deflate, br",
+            "accept-language": "en-US,en;q=0.9",
+            "cache-control": "no-cache",
+            "content-type": "application/json",
+            "origin": "https://app.earth2.io",
+            "pragma": "no-cache",
+            "sec-ch-ua": "'.Not/A)Brand';v='99', 'Google Chrome';v='103', 'Chromium';v='103'",
+            "sec-ch-ua-mobile": "?0",
+            "sec-ch-ua-platform": "Windows",
+            "sec-fetch-dest": "empty",
+            "sec-fetch-mode": "cors",
+            "sec-fetch-site": "same-origin",
+            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+        }
+    },
+    "FORECASTING_CONFIG": {
+        "YEARS":3,
+        "DYNAMIC":{
+            "YEAR_1": {
+                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.4,
+                "REV_FEES":0.06,
+                "REV_SKINS":0.0,
+                "EXP_FRAUD":0.1,
+                "EXP_BUGS":0.15,
+                "EXP_SALARIES":0,
+                "EXP_OPERATIONAL":0,
+                "EXP_ACQUISITIONS":0
+            },
+            "YEAR_2": {
+                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.4,
+                "REV_FEES":0.06,
+                "REV_SKINS":0.0,
+                "EXP_FRAUD":0.1,
+                "EXP_BUGS":0.15,
+                "EXP_SALARIES":0,
+                "EXP_OPERATIONAL":0,
+                "EXP_ACQUISITIONS":0
+            },
+            "YEAR_3": {
+                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.2,
+                "REV_FEES":0.06,
+                "REV_SKINS":0.0,
+                "EXP_FRAUD":0.1,
+                "EXP_BUGS":0.15,
+                "EXP_SALARIES":0,
+                "EXP_OPERATIONAL":0,
+                "EXP_ACQUISITIONS":0
+            }
+        },
+        "FLAT": {
+            "EXP_LIT":0.035,
+            "EXP_REF":0.1125
+        }
+    }
+}
