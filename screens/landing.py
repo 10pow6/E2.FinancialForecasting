@@ -32,7 +32,7 @@ class Profile(Widget):
         
         self.mutate_reactive(Profile.configs)
 
-class Forecast(Widget):
+class Snapshot(Widget):
     snapshots: reactive[list[ListItem]] = reactive(list, recompose=True) 
     def compose(self) -> ComposeResult:
         yield ListView( *self.snapshots )
@@ -41,10 +41,12 @@ class Forecast(Widget):
         # Get config profiles
         path = SNAPSHOTS_DIR
         dir_list = os.listdir(path)
-        self.snapshots.append( ListItem(Label("Create new")) )
         for file in dir_list:
             self.snapshots.append( ListItem(Label(file))  )
-        self.mutate_reactive(Forecast.snapshots)
+        if( len(self.snapshots) == 0 ):
+            load_button=self.app.query_one("Landing #button-load-snapshot")
+            load_button.disabled=True
+        self.mutate_reactive(Snapshot.snapshots)
 
 
 class Landing(Screen):
@@ -54,18 +56,24 @@ class Landing(Screen):
 
         with Vertical():
             with Container():
-                yield Static(" Profile ", id="profile-title")
+                yield Static(" Profiles ", id="profile-title")
                 yield Profile(id="profile")
             with Container():
-                yield Static(" Forecast ", id="history-title")
-                yield Forecast(id="history")
+                yield Static(" Snapshots ", id="history-title")
+                yield Snapshot(id="history")
 
         with Container(id="start-forecast"):
             yield Static(" Actions ", id="actions-title")
-            yield Button("Generate Forecast", variant="default" )
-            yield Button("Load Forecast", variant="default", disabled=True )
-            yield Button("Quit", variant="default" )
+            yield Button("Generate New Snapshot", variant="default", id="button-generate-new" )
+            yield Button("Load Snapshot", variant="default", disabled=False, id="button-load-snapshot" )
+            yield Button("Quit", variant="default", id="button-quit" )
 
         yield Footer()
-        
+
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Event handler called when a button is pressed."""
+        button_id = event.button.id
+
+        if button_id == "button-quit":
+            self.app.exit()
         
