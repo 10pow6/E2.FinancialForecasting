@@ -30,3 +30,8 @@ Landing {
     layout: grid;
     grid-size: 2;
 }
+
+Loading {
+    layout: grid;
+    grid-size: 1 2;
+}
