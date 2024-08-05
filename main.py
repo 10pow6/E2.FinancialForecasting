@@ -44,7 +44,7 @@ class ForecastApp(App):
         if( event_payload["type"]=="flow" and event_payload["direction"]=="push" ):
             if( event_payload["action"]=="execute_api"):
                 api_handler.set_options(config_file=event_payload["data"]["selected_config"])
-                self.push_screen( Loading( init_mode=event.id, init_msg=event.desc ) )
+                self.push_screen( Loading( init_mode=event.id, init_msg=event.desc, api_handler=api_handler ) )
 
 if __name__ == "__main__":
     app = ForecastApp()

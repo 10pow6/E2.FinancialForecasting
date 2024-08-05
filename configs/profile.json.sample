@@ -1,5 +1,10 @@
 {
     "API_CONFIG": {
+        "ENDPOINTS": {
+            "realtime_url":"https://r.earth2.io/",
+            "graphql_url":"https://app.earth2.io/graphql",
+            "v2_url":"https://app.earth2.io/api/v2/"
+        },
         "HEADERS": {
             "cookie": "", 
             "x-csrftoken": "", 
@@ -44,7 +49,7 @@
                 "EXP_ACQUISITIONS":1500000
             },
             "YEAR_3": {
-                "COMMENTS":["2022-2023", "AIR Gone"],
+                "COMMENTS":["2022-2023","AIR Gone"],
                 "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.15,
                 "REV_SKINS":0.0,
                 "EXP_FRAUD":0.025,
