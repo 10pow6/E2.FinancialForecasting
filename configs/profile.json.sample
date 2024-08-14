@@ -1,28 +1,32 @@
 {
     "API_CONFIG": {
+        "AUTH": {
+            "IMPORTANT":"!!!!!DANGEROUS:  NEVER SHARE!!!!!",
+            "COOKIE":"REDACT_NEVER_VERSION_CONTROL_IN_THIS_FILE",
+            "X-CSRFTOKEN":"REDACT_NEVER_VERSION_CONTROL_IN_THIS_FILE"
+        },
         "ENDPOINTS": {
             "realtime_url":"https://r.earth2.io/",
             "graphql_url":"https://app.earth2.io/graphql",
             "v2_url":"https://app.earth2.io/api/v2/"
         },
         "HEADERS": {
-            "cookie": "", 
-            "x-csrftoken": "", 
-            "referer": "https://app.earth2.io/",
-            "accept": "application/json",
-            "accept-encoding": "gzip, deflate, br",
-            "accept-language": "en-US,en;q=0.9",
-            "cache-control": "no-cache",
-            "content-type": "application/json",
-            "origin": "https://app.earth2.io",
-            "pragma": "no-cache",
+            "Referer": "https://app.earth2.io/",
+            "Accept": "application/json",
+            "Accept-Encoding": "gzip, deflate, br",
+            "Accept-Language": "en-US,en;q=0.9",
+            "Cache-Control": "no-cache",
+            "Content-type": "application/json",
+            "Origin": "https://app.earth2.io",
+            "Pragma": "no-cache",
             "sec-ch-ua": "'.Not/A)Brand';v='99', 'Google Chrome';v='103', 'Chromium';v='103'",
             "sec-ch-ua-mobile": "?0",
             "sec-ch-ua-platform": "Windows",
-            "sec-fetch-dest": "empty",
-            "sec-fetch-mode": "cors",
-            "sec-fetch-site": "same-origin",
-            "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36"
+            "Sec-Fetch-Dest": "empty",
+            "Sec-Fetch-Mode": "cors",
+            "Sec-Fetch-Site": "same-origin",
+            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36",
+            "X-SnoopingAround": "If you enjoy learning how things work, have a look at earth2.io/careers and contact us. Mention this header."
         }
     },
     "FORECASTING_CONFIG": {

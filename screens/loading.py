@@ -11,6 +11,7 @@ class Loading(Screen):
         self.init_mode = init_mode
         self.init_msg = init_msg
         self.api_handler = api_handler
+        self.tile_info = {}
         super().__init__()
 
     def compose(self) -> ComposeResult:
@@ -22,26 +23,38 @@ class Loading(Screen):
     def on_mount(self) -> None:
         text_log = self.query_one(RichLog)
         text_log.write("[bold magenta]"+self.init_msg)
-        self.run_worker(self.api_handler.tileprices_v2(), exclusive=True)
+
+        # API Pulls
+        self.run_worker(self.api_handler.tileprices_v2(), exclusive=False)
+        self.run_worker(self.api_handler.territory_prices(), exclusive=False)
+
+        # Write Snapshot
+        path = DirectoryConfig.snapshots
+        now = datetime.datetime.now()
+        formatted_datetime = now.strftime("%Y%m%d%H%M%S")
+        filename = f"snapshot-{formatted_datetime}.json"
+
+        with open(path+"/"+filename, 'w') as file:
+            json.dump(self.tile_info, file, indent=4)
+
+        text_log = self.query_one(RichLog)
+        text_log.write("Successfully wrote snapshot file.")
 
     def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
-            
             """Called when the worker state changes."""
             if( event.worker.name=="tileprices_v2" and event.worker.result != None):
                 self.log(event)
                 self.log(event.worker.result)
                 
-                tile_info = {
-                     "country_totals":event.worker.result
-                }
-
-                path = DirectoryConfig.snapshots
-                now = datetime.datetime.now()
-                formatted_datetime = now.strftime("%Y%m%d%H%M%S")
-                filename = f"snapshot-{formatted_datetime}.json"
-
-                with open(path+"/"+filename, 'w') as file:
-                    json.dump(tile_info, file, indent=4)
+                self.tile_info["countries"] = event.worker.result
 
                 text_log = self.query_one(RichLog)
                 text_log.write("Pulled data from tile statistics (valid for T1 & T2).")
+            elif( event.worker.name=="territory_prices" and event.worker.result != None):
+                self.log(event)
+                self.log(event.worker.result)
+                
+                self.tile_info["territories"] = event.worker.result
+
+                text_log = self.query_one(RichLog)
+                text_log.write("Pulled data from tile statistics (Territories).")

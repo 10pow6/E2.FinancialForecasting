@@ -40,22 +40,6 @@ def async_retry_with_backoff(max_retries, max_backoff, backoff_factor, product_c
 
 class APIHandler:
     def __init__(self):
-        self.headers = {
-            'accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.9',
-            'accept-encoding': 'gzip, deflate, br',
-            'accept-language': 'en-US,en;q=0.9',
-            'cache-control': 'no-cache',
-            'pragma': 'no-cache',
-            'sec-ch-ua': '".Not/A)Brand";v="99", "Google Chrome";v="103", "Chromium";v="103"',
-            'sec-ch-ua-mobile': '?0',
-            'sec-ch-ua-platform': '"Windows"',
-            'sec-fetch-dest': 'document',
-            'sec-fetch-mode': 'navigate',
-            'sec-fetch-site': 'none',
-            'sec-fetch-user': '?1',
-            'upgrade-insecure-requests': '1',
-            'user-agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/103.0.0.0 Safari/537.36'
-        }
         self.options={}
     def set_options(self,config_file):
         file_path = DirectoryConfig.configs + "/" + config_file
@@ -69,13 +53,26 @@ class APIHandler:
         except json.JSONDecodeError:
             print("The file does not contain valid JSON")
         
-        print(self.options)
-        
     @async_retry_with_backoff(max_retries=5, max_backoff=60, backoff_factor=0.5, product_call=False)
     async def tileprices_v2(self, method="GET", params=None, data=None,url=None,headers=None):
         url=self.options["API_CONFIG"]["ENDPOINTS"]["v2_url"]+"tileprices/"
-        headers=self.headers
         async with httpx.AsyncClient() as client:
-            response = await client.request(method, url, params=params, data=data, headers=headers)
+            response = await client.request(method, url, params=params, data=data, headers=self.options["API_CONFIG"]["HEADERS"])
         response.raise_for_status()
         return response.json()
+
+    @async_retry_with_backoff(max_retries=5, max_backoff=60, backoff_factor=0.5, product_call=False)
+    async def territory_prices(self, method="GET", params=None, data=None,url=None,headers=None):
+        url=self.options["API_CONFIG"]["ENDPOINTS"]["r_url"]+"territory_releases"
+        headers_with_auth=self.options["API_CONFIG"]["HEADERS"]
+
+        #inject auth to headers
+        headers_with_auth["cookie"]=self.options["API_CONFIG"]["AUTH"]["COOKIE"]
+        headers_with_auth["X-CSRFToken"]=self.options["API_CONFIG"]["AUTH"]["X-CSRFTOKEN"]
+        
+        async with httpx.AsyncClient() as client:
+            response = await client.request(method, url, params=params, data=data, headers=headers_with_auth)
+        print("HERE:" ,response.json())
+        response.raise_for_status()
+        return response.json()
+        
