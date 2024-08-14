@@ -72,7 +72,6 @@ class APIHandler:
         
         async with httpx.AsyncClient() as client:
             response = await client.request(method, url, params=params, data=data, headers=headers_with_auth)
-        print("HERE:" ,response.json())
         response.raise_for_status()
         return response.json()
         

@@ -22,6 +22,11 @@ pip install -r requirements.txt
 ```
 5) Run either via `python main.py` or `wt_run.py` if you have new Windows Terminal
 
+# Helper Batch Files
+1) **textual_console_nonverbose.bat**: runs textual console and suppresses noise
+2) **textual_dev_mode.bat**: runs textual app in dev mode
+3) **source.bat**: easy mode to set terminal
+4) **wt_run.bat**: runs terminal and and then executes venv & app
 
 # Tech Notes
 **https://r.earth2.io/territory_releases?released=true&sort_by=votes_value&sort_dir=desc&page=1&perPage=12**
