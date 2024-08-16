@@ -5,6 +5,7 @@ from textual.worker import Worker
 import json
 from statics import DirectoryConfig
 import datetime
+from helpers import spend_worker
 
 class Loading(Screen):
     def __init__(self, init_mode: str, init_msg: str, api_handler) -> None:
@@ -21,7 +22,10 @@ class Loading(Screen):
         yield Footer()
     
     async def call_apis(self):
-          # API Pulls
+        text_log = self.query_one(RichLog)
+        text_log.write("Starting API pull of T1 & T2 Data.")
+        text_log.write("Starting API pull of T3 Data (this can take a little).")
+        # API Pulls
         workers=[self.run_worker(self.api_handler.tileprices_v2(), exclusive=False),
                  self.run_worker(self.api_handler.territory_prices(), exclusive=False)]
         await self.workers.wait_for_complete(workers)
@@ -52,6 +56,8 @@ class Loading(Screen):
                 text_log = self.query_one(RichLog)
                 text_log.write("Pulled data from tile statistics (Territories).")
             elif( event.worker.name=="call_apis" and event.worker.result != None):
+                #country_data = self.tile_info["countries"]
+                #territory_data = self.tile_info["territories"]
                 # Write Snapshot after API calls
                 path = DirectoryConfig.snapshots
                 now = datetime.datetime.now()

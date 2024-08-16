@@ -22,6 +22,9 @@ pip install -r requirements.txt
 ```
 5) Run either via `python main.py` or `wt_run.py` if you have new Windows Terminal
 
+# Linux
+This software has been designed to be cross compatible with Linux. Various helper files (IE source.bat, wt_run.bat) obviously won't work, but you should be able to run from a terminal no issue. 
+
 # Helper Batch Files
 1) **textual_console_nonverbose.bat**: runs textual console and suppresses noise
 2) **textual_dev_mode.bat**: runs textual app in dev mode
@@ -29,7 +32,7 @@ pip install -r requirements.txt
 4) **wt_run.bat**: runs terminal and and then executes venv & app
 
 # Tech Notes
-**https://r.earth2.io/territory_releases?released=true&sort_by=votes_value&sort_dir=desc&page=1&perPage=12**
+**GET https://r.earth2.io/territory_releases?released=true&sort_by=votes_value&sort_dir=desc&page=1&perPage=12**
 ```json
 {
     "data": [
@@ -109,7 +112,7 @@ pip install -r requirements.txt
 ```
 
 
-**https://app.earth2.io/api/v2/**
+**GET https://app.earth2.io/api/v2/**
 ```json
 [
     {
@@ -140,4 +143,25 @@ pip install -r requirements.txt
         "landfield_tier": 2
     }
 ]
+```
+
+**POST https://app.earth2.io/graphql**
+```json
+{"query":"{\n      getTileIdPrice(tileId: 330456481606721, landfieldTier: 2)\n      {\n          essFinal,\n          essDiscountRate,\n          eusdDiscountRate,\n          stakeReq,\n          final,\n          value\n      }\n    }"}
+```
+
+_response_
+```json
+{
+    "data": {
+        "getTileIdPrice": {
+            "essFinal": null,
+            "essDiscountRate": null,
+            "eusdDiscountRate": null,
+            "stakeReq": null,
+            "final": 0.299,
+            "value": 3.87
+        }
+    }
+}
 ```
