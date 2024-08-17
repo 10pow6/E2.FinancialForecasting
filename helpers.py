@@ -49,6 +49,7 @@ def spend_worker(tiles_sold=0, sys_val=0, tier=0, country_code=""):
 
     return {
         "countryCode": country_code,
+        "tilesSold": tiles_sold,
         "tier": tier,
         "userSpend": float(user_spend),
         "mCap": tiles_sold * sys_val

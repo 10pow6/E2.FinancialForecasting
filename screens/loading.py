@@ -7,7 +7,7 @@ from statics import DirectoryConfig
 import datetime
 import timeit
 from helpers import spend_worker
-
+import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 import asyncio
 
@@ -149,12 +149,32 @@ class Loading(Screen):
                 text_log.write("Pulled data from tile statistics (Territories).")
             elif( event.worker.name=="process_spend" and event.worker.result != None):
                 text_log = self.query_one(RichLog)
-                total=0
-                for entry in self.final_calc:
-                    total+=entry["userSpend"]
-                text_log.write(f"Total: {total}")
+                
+                text_log.write("================")
+                text_log.write("Quick View Stats")
+                text_log.write("================")
+                # Convert the list of dictionaries to a structured NumPy array
+                dtype = [('countryCode', 'U2'), ('tilesSold', 'i4'), ('tier', 'i1'), ('userSpend', 'f8'), ('mCap', 'f8')]
+                data = np.array([(d['countryCode'], d['tilesSold'], d['tier'], d['userSpend'], d['mCap']) for d in self.final_calc], dtype=dtype)
+                
+                # Calculate total userSpend
+                total_spend = np.sum(data['userSpend'])
+                
+                # Calculate total tiles sold
+                total_tiles = np.sum(data['tilesSold'])
+                
+                # Sum tilesSold by tier
+                unique_tiers = np.unique(data['tier'])
+                tier_tiles = {tier: np.sum(data['tilesSold'][data['tier'] == tier]) for tier in unique_tiers}
+                
+                # Output results with formatted numbers
+                text_log.write(f"Total User Spend: ${total_spend:,.2f}")
+                text_log.write(f"Total Tiles Sold: {total_tiles:,}")
+                for tier in sorted(tier_tiles.keys()):
+                    text_log.write(f"Tier {tier} Total Tiles Sold: {tier_tiles[tier]:,}")
+                
                 stop = timeit.default_timer()
-                text_log.write(f'Complete. Processing Time: {stop - self.start}')  
+                text_log.write(f'Complete. Processing Time: {stop - self.start:.4f} seconds')
             elif( event.worker.name=="call_apis" and event.worker.result != None):
                 #country_data = self.tile_info["countries"]
                 #territory_data = self.tile_info["territories"]

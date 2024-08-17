@@ -51,8 +51,10 @@ class Snapshot(Widget):
         # Get config profiles
         path = DirectoryConfig.snapshots
         dir_list = os.listdir(path)
+        dir_list=dir_list[::-1] #reverse list so newest at top -- QOL
         for file in dir_list:
             self.snapshots.append( ListItem(Label(file),name=file)  )
+
         if( len(self.snapshots) == 0 ):
             load_button=self.app.query_one("Landing #button-load-snapshot")
             load_button.disabled=True
