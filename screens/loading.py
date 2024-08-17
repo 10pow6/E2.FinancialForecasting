@@ -5,7 +5,10 @@ from textual.worker import Worker
 import json
 from statics import DirectoryConfig
 import datetime
+import timeit
 from helpers import spend_worker
+import concurrent.futures
+
 
 class Loading(Screen):
     def __init__(self, init_mode: str, init_msg: str, api_handler) -> None:
@@ -13,6 +16,8 @@ class Loading(Screen):
         self.init_msg = init_msg
         self.api_handler = api_handler
         self.tile_info = {}
+        self.final_calc = []
+        self.start = timeit.default_timer()
         super().__init__()
 
     def compose(self) -> ComposeResult:
@@ -31,11 +36,92 @@ class Loading(Screen):
         await self.workers.wait_for_complete(workers)
         return True
 
+
+    async def process_spend(self,MAX_CONCURRENCY=2):
+        current_concurrency=0
+        country_data = self.tile_info["countries"]
+        territory_data = self.tile_info["territories"]
+        text_log = self.query_one(RichLog)
+        text_log.write("Starting user spend calculation for T1 & T2 (this can take a little).")
+        
+        # country processing
+        mywork=[]
+        for country in country_data:
+            tiles_sold=country["totalTilesSold"]
+            sys_val=country["value"]
+            tier=country["landfield_tier"]
+            country_code=country["countryCode"]
+            if( tier != 3 ):
+                mywork.append(self.run_worker(spend_worker(tiles_sold=tiles_sold,sys_val=sys_val,tier=tier,country_code=country_code), exclusive=False))
+                current_concurrency+=1
+            
+            if current_concurrency >= MAX_CONCURRENCY:
+                await self.workers.wait_for_complete(mywork)
+                for worker in mywork:
+                    self.final_calc.append(worker.result)
+                mywork.clear()
+                current_concurrency=0
+        
+        # wait for any stragglers
+        if( len( mywork ) > 0 ):
+            await self.workers.wait_for_complete(mywork)
+            for worker in mywork:
+                self.final_calc.append(worker.result)
+            current_concurrency=0
+            mywork.clear()
+        text_log.write("Completed processing T1 & T2.")
+ 
+
+        text_log.write("Starting user spend calculation for T3 (this can take a little).")
+        # territory processing
+        for territory in territory_data:
+            tiles_sold=territory["estimatedTilesSold"]
+            sys_val=territory["estimatedValue"]
+            tier=3
+            country_code=territory["id"]
+            
+            mywork.append(self.run_worker(spend_worker(tiles_sold=tiles_sold,sys_val=sys_val,tier=3,country_code=country_code), exclusive=False))
+            current_concurrency+=1
+            
+            if current_concurrency >= MAX_CONCURRENCY:
+                await self.workers.wait_for_complete(mywork)
+                for worker in mywork:
+                    self.final_calc.append(worker.result)
+                mywork.clear()
+                current_concurrency=0
+        
+        # wait for any stragglers
+        if( len( mywork ) > 0 ):
+            await self.workers.wait_for_complete(mywork)
+            for worker in mywork:
+                self.final_calc.append(worker.result)
+            current_concurrency=0
+            mywork.clear()
+        mywork.clear()
+
+        text_log.write("Completed processing T3.")
+        with open("out.json", 'w') as file:
+            json.dump(self.final_calc, file, indent=4)
+
+        return True
+    
+
     def on_mount(self) -> None:
+        DEBUG_MODE_BYPASS_API_PULL=True
         text_log = self.query_one(RichLog)
         text_log.write("[bold magenta]"+self.init_msg)
 
-        self.run_worker(self.call_apis(), exclusive=False)
+        if( not DEBUG_MODE_BYPASS_API_PULL ):
+            self.run_worker(self.call_apis(), exclusive=False)
+        elif( DEBUG_MODE_BYPASS_API_PULL ):
+            # we manually read a snapshot file and run the spent money
+            # flow to avoid excess API pulls.  This is essentially LOAD mode
+            # which will be written later :P
+            path = DirectoryConfig.snapshots
+            snapshot="snapshot-20240816141949.json"
+            with open(path+"/"+snapshot, 'r') as file:
+                self.tile_info = json.load(file)
+            self.run_worker(self.process_spend(), exclusive=False)
         
     def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
             """Called when the worker state changes."""
@@ -55,6 +141,13 @@ class Loading(Screen):
 
                 text_log = self.query_one(RichLog)
                 text_log.write("Pulled data from tile statistics (Territories).")
+            elif( event.worker.name=="process_spend" and event.worker.result != None):
+                total=0
+                for entry in self.final_calc:
+                    total+=entry["userSpend"]
+                print(total)
+                stop = timeit.default_timer()
+                print('>> Complete. Processing Time: ', stop - self.start)  
             elif( event.worker.name=="call_apis" and event.worker.result != None):
                 #country_data = self.tile_info["countries"]
                 #territory_data = self.tile_info["territories"]
