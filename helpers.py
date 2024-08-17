@@ -29,27 +29,27 @@ def lng_lat_to_quadkey_compress(lng_lat, zoom):
     print(result)  # Output: 162837496849121
 '''
 
-# if calling w/ textual work
-# async def spend_worker(tiles_sold=0,sys_val=0,tier=0,country_code=""):   
-def spend_worker(tiles_sold=0,sys_val=0,tier=0,country_code=""):   
-    base = 0.1
-    # exponent_base = np.e       ### standard e
-    # exponent_base = 2.7142     ### e2 economist rate
-    # exponent_base = 2.7141     ### butt og rate
+
+# optimized
+def spend_worker(tiles_sold=0, sys_val=0, tier=0, country_code=""):
+    base = 0.01 if country_code == "__" else 0.1
     
-    if( country_code == "__" ): #exception for lower international price
-        base = 0.01
-        
-    if tier == 1: # Landfield tier 1 formula
-        gen = (    base * ( np.e ** (x/100000) ) for x in range(0,tiles_sold)    )
-    elif tier == 2: # Landfield tier 2 formula
-        gen = (    base * ( np.e ** (x/150000) ) for x in range(0,tiles_sold)    )
-    elif tier == 3: # Landfield tier 3 formula
-        gen = (    base * ( np.e ** (x/150000) ) for x in range(0,tiles_sold)    )   
+    if tier == 1:
+        exponent = 1 / 100000
+    elif tier in (2, 3):
+        exponent = 1 / 150000
+    else:
+        raise ValueError("Invalid tier")
+
+    # Create a vectorized range
+    x = np.arange(tiles_sold)
+    
+    # Vectorized calculation
+    user_spend = base * np.sum(np.exp(x * exponent))
 
     return {
         "countryCode": country_code,
-        "tier":tier,
-        "userSpend": float(np.sum(np.fromiter(gen,np.float64))),
-        "mCap": tiles_sold*sys_val
+        "tier": tier,
+        "userSpend": float(user_spend),
+        "mCap": tiles_sold * sys_val
     }
