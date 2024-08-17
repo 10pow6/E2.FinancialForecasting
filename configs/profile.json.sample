@@ -30,7 +30,7 @@
         }
     },
     "FORECASTING_CONFIG": {
-        "YEARS":3,
+        "YEARS":4,
         "DYNAMIC":{
             "YEAR_1": {
                 "COMMENTS":["2020-2021","Initial release"],

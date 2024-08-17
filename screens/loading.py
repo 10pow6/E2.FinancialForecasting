@@ -85,11 +85,12 @@ class Loading(Screen):
         self.final_calc.extend(territory_results)
 
         text_log.write("Completed processing T3.")
+        executor.shutdown(wait=True)
 
         with open("out.json", 'w') as file:
             json.dump(self.final_calc, file, indent=4)
 
-        executor.shutdown(wait=True)
+        
         return True    
 
     # Older code that has a textual worker spawn more textual workers
@@ -165,6 +166,7 @@ class Loading(Screen):
     '''
 
     def on_mount(self) -> None:
+        ### BELOW LINE FOR DEBUG MODE WHILE I BUILD THIS OUT.
         DEBUG_MODE_BYPASS_API_PULL=True
         text_log = self.query_one(RichLog)
         text_log.write("[bold magenta]"+self.init_msg)
@@ -176,7 +178,7 @@ class Loading(Screen):
             # flow to avoid excess API pulls.  This is essentially LOAD mode
             # which will be written later :P
             path = DirectoryConfig.snapshots
-            snapshot="snapshot-20240816141949.json"
+            snapshot="snapshot-20240816193750.json"
             with open(path+"/"+snapshot, 'r') as file:
                 self.tile_info = json.load(file)
             self.run_worker(self.process_spend(), exclusive=False)
