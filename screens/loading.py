@@ -7,8 +7,9 @@ from statics import DirectoryConfig
 import datetime
 import timeit
 from helpers import spend_worker
-import concurrent.futures
 
+from concurrent.futures import ProcessPoolExecutor
+import asyncio
 
 class Loading(Screen):
     def __init__(self, init_mode: str, init_msg: str, api_handler) -> None:
@@ -36,8 +37,65 @@ class Loading(Screen):
         await self.workers.wait_for_complete(workers)
         return True
 
+    async def process_spend(self, MAX_WORKERS=8):
+        executor = ProcessPoolExecutor(max_workers=MAX_WORKERS)
 
-    async def process_spend(self,MAX_CONCURRENCY=2):
+
+        country_data = self.tile_info["countries"]
+        territory_data = self.tile_info["territories"]
+        text_log = self.query_one(RichLog)
+        text_log.write("Starting user spend calculation for T1 & T2 (this can take a little).")
+
+        loop = asyncio.get_running_loop()
+
+        # Process countries (T1 & T2)
+        country_futures = []
+        for country in country_data:
+            if country["landfield_tier"] != 3:
+                future = loop.run_in_executor(
+                    executor,
+                    spend_worker,
+                    country["totalTilesSold"],
+                    country["value"],
+                    country["landfield_tier"],
+                    country["countryCode"]
+                )
+                country_futures.append(future)
+        
+        country_results = await asyncio.gather(*country_futures)
+        self.final_calc.extend(country_results)
+        
+        text_log.write("Completed processing T1 & T2.")
+        text_log.write("Starting user spend calculation for T3 (this can take a little).")
+
+        # Process territories (T3)
+        territory_futures = []
+        for territory in territory_data:
+            future = loop.run_in_executor(
+                executor,
+                spend_worker,
+                territory["estimatedTilesSold"],
+                territory["estimatedValue"],
+                3,
+                territory["id"]
+            )
+            territory_futures.append(future)
+        
+        territory_results = await asyncio.gather(*territory_futures)
+        self.final_calc.extend(territory_results)
+
+        text_log.write("Completed processing T3.")
+
+        with open("out.json", 'w') as file:
+            json.dump(self.final_calc, file, indent=4)
+
+        executor.shutdown(wait=True)
+        return True    
+
+    # Older code that has a textual worker spawn more textual workers
+    # as this was asyncio, there was no CPU bump
+    '''
+    async def deprecated_process_spend(self,MAX_CONCURRENCY=2):
         current_concurrency=0
         country_data = self.tile_info["countries"]
         territory_data = self.tile_info["territories"]
@@ -104,7 +162,7 @@ class Loading(Screen):
             json.dump(self.final_calc, file, indent=4)
 
         return True
-    
+    '''
 
     def on_mount(self) -> None:
         DEBUG_MODE_BYPASS_API_PULL=True

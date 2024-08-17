@@ -29,8 +29,9 @@ def lng_lat_to_quadkey_compress(lng_lat, zoom):
     print(result)  # Output: 162837496849121
 '''
 
-
-async def spend_worker(tiles_sold=0,sys_val=0,tier=0,country_code=""):   
+# if calling w/ textual work
+# async def spend_worker(tiles_sold=0,sys_val=0,tier=0,country_code=""):   
+def spend_worker(tiles_sold=0,sys_val=0,tier=0,country_code=""):   
     base = 0.1
     # exponent_base = np.e       ### standard e
     # exponent_base = 2.7142     ### e2 economist rate
