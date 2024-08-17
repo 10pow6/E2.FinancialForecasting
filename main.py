@@ -12,8 +12,12 @@ import os
 from statics import DirectoryConfig
 
 # QOL make dir if does not exist
-os.makedirs(os.path.dirname(DirectoryConfig.snapshots), exist_ok=True)
-os.makedirs(os.path.dirname(DirectoryConfig.calculated), exist_ok=True)
+# Get the current working directory
+
+
+os.makedirs(DirectoryConfig.snapshots, exist_ok=True)
+os.makedirs(DirectoryConfig.calculated, exist_ok=True)
+
 
 api_handler = APIHandler()
 
@@ -52,6 +56,12 @@ class ForecastApp(App):
             if( event_payload["action"]=="execute_api"):
                 api_handler.set_options(config_file=event_payload["data"]["selected_config"])
                 self.push_screen( Loading( init_mode=event.id, init_msg=event.desc, api_handler=api_handler ) )
+        if( event_payload["type"]=="flow" and event_payload["direction"]=="push" ):
+            if( event_payload["action"]=="load_snapshot"):
+                api_handler.set_options(config_file=event_payload["data"]["selected_config"])
+                self.push_screen( Loading( init_mode=event.id, init_msg=event.desc, api_handler=api_handler,snapshot_name=event_payload["data"]["snapshot"] ) )
+
+
 
 if __name__ == "__main__":
     app = ForecastApp()

@@ -12,13 +12,13 @@ from concurrent.futures import ProcessPoolExecutor
 import asyncio
 
 class Loading(Screen):
-    def __init__(self, init_mode: str, init_msg: str, api_handler) -> None:
-        print("LOADING SCREEN ADDED")
+    def __init__(self, init_mode: str, init_msg: str, api_handler, snapshot_name=None) -> None:
         self.init_mode = init_mode
         self.init_msg = init_msg
         self.api_handler = api_handler
         self.tile_info = {}
         self.final_calc = []
+        self.snapshot_name=snapshot_name
 
         # need to update this logic so it makes sense... keep in my we may load old snapshots.  need some naming format that captures the load =p. 
         # probably calculated.snapshot-timestamp.json that cooresponds to either the thing we LOADED or the thing we generated.  
@@ -26,6 +26,10 @@ class Loading(Screen):
         # probably if we are in "load mode", just overwrite this with the parsed out timestamp
         now = datetime.datetime.now()
         self.formatted_datetime = now.strftime("%Y%m%d%H%M%S")
+
+        # override to match the loaded snapshot ;).  format is always the same from this app
+        if self.init_mode == "flow.push.load_snapshot":
+            self.formatted_datetime=self.snapshot_name[9:-5]
         
 
         self.start = timeit.default_timer()
@@ -108,21 +112,19 @@ class Loading(Screen):
         text_log.write("Successfully wrote calculated file.")
         
         return True    
-
+    
     def on_mount(self) -> None:
-        ### BELOW LINE FOR DEBUG MODE WHILE I BUILD THIS OUT.
-        DEBUG_MODE_BYPASS_API_PULL=True
+        LOAD_MODE = (self.init_mode == "flow.push.load_snapshot")
+
         text_log = self.query_one(RichLog)
         text_log.write("[bold magenta]"+self.init_msg)
 
-        if( not DEBUG_MODE_BYPASS_API_PULL ):
+        if( not LOAD_MODE ):
             self.run_worker(self.call_apis(), exclusive=False)
-        elif( DEBUG_MODE_BYPASS_API_PULL ):
-            # we manually read a snapshot file and run the spent money
-            # flow to avoid excess API pulls.  This is essentially LOAD mode
-            # which will be written later :P
+        elif( LOAD_MODE ):
+            text_log.write("Processing user spend.")
             path = DirectoryConfig.snapshots
-            snapshot="snapshot-20240816193750.json"
+            snapshot=self.snapshot_name
             with open(path+"/"+snapshot, 'r') as file:
                 self.tile_info = json.load(file)
             self.run_worker(self.process_spend(), exclusive=False)
@@ -146,12 +148,13 @@ class Loading(Screen):
                 text_log = self.query_one(RichLog)
                 text_log.write("Pulled data from tile statistics (Territories).")
             elif( event.worker.name=="process_spend" and event.worker.result != None):
+                text_log = self.query_one(RichLog)
                 total=0
                 for entry in self.final_calc:
                     total+=entry["userSpend"]
-                print(total)
+                text_log.write(f"Total: {total}")
                 stop = timeit.default_timer()
-                print('>> Complete. Processing Time: ', stop - self.start)  
+                text_log.write(f'Complete. Processing Time: {stop - self.start}')  
             elif( event.worker.name=="call_apis" and event.worker.result != None):
                 #country_data = self.tile_info["countries"]
                 #territory_data = self.tile_info["territories"]
@@ -159,6 +162,7 @@ class Loading(Screen):
                 path = DirectoryConfig.snapshots
                 
                 filename = f"snapshot-{self.formatted_datetime}.json"
+                self.snapshot_name=filename
 
                 with open(path+"/"+filename, 'w') as file:
                     json.dump(self.tile_info, file, indent=4)
@@ -166,75 +170,7 @@ class Loading(Screen):
                 text_log = self.query_one(RichLog)
                 text_log.write("Successfully wrote snapshot file.")
 
+                text_log.write("Processing user spend.")
+                self.run_worker(self.process_spend(), exclusive=False)
 
-    # Older code that has a textual worker spawn more textual workers
-    # as this was asyncio, there was no CPU bump
-    '''
-    async def deprecated_process_spend(self,MAX_CONCURRENCY=2):
-        current_concurrency=0
-        country_data = self.tile_info["countries"]
-        territory_data = self.tile_info["territories"]
-        text_log = self.query_one(RichLog)
-        text_log.write("Starting user spend calculation for T1 & T2 (this can take a little).")
-        
-        # country processing
-        mywork=[]
-        for country in country_data:
-            tiles_sold=country["totalTilesSold"]
-            sys_val=country["value"]
-            tier=country["landfield_tier"]
-            country_code=country["countryCode"]
-            if( tier != 3 ):
-                mywork.append(self.run_worker(spend_worker(tiles_sold=tiles_sold,sys_val=sys_val,tier=tier,country_code=country_code), exclusive=False))
-                current_concurrency+=1
-            
-            if current_concurrency >= MAX_CONCURRENCY:
-                await self.workers.wait_for_complete(mywork)
-                for worker in mywork:
-                    self.final_calc.append(worker.result)
-                mywork.clear()
-                current_concurrency=0
-        
-        # wait for any stragglers
-        if( len( mywork ) > 0 ):
-            await self.workers.wait_for_complete(mywork)
-            for worker in mywork:
-                self.final_calc.append(worker.result)
-            current_concurrency=0
-            mywork.clear()
-        text_log.write("Completed processing T1 & T2.")
- 
-
-        text_log.write("Starting user spend calculation for T3 (this can take a little).")
-        # territory processing
-        for territory in territory_data:
-            tiles_sold=territory["estimatedTilesSold"]
-            sys_val=territory["estimatedValue"]
-            tier=3
-            country_code=territory["id"]
-            
-            mywork.append(self.run_worker(spend_worker(tiles_sold=tiles_sold,sys_val=sys_val,tier=3,country_code=country_code), exclusive=False))
-            current_concurrency+=1
-            
-            if current_concurrency >= MAX_CONCURRENCY:
-                await self.workers.wait_for_complete(mywork)
-                for worker in mywork:
-                    self.final_calc.append(worker.result)
-                mywork.clear()
-                current_concurrency=0
-        
-        # wait for any stragglers
-        if( len( mywork ) > 0 ):
-            await self.workers.wait_for_complete(mywork)
-            for worker in mywork:
-                self.final_calc.append(worker.result)
-            current_concurrency=0
-            mywork.clear()
-        mywork.clear()
-
-        text_log.write("Completed processing T3.")
-        with open("out.json", 'w') as file:
-            json.dump(self.final_calc, file, indent=4)
-
-        return True
-    '''
+                

@@ -37,19 +37,28 @@ class Profile(Widget):
         self.mutate_reactive(Profile.configs)
 
 class Snapshot(Widget):
-    snapshots: reactive[list[ListItem]] = reactive(list, recompose=True) 
+    snapshots: reactive[list[ListItem]] = reactive(list, recompose=True)
+    selected = reactive("")
+
     def compose(self) -> ComposeResult:
         yield ListView( *self.snapshots )
+
+    def on_list_view_selected(self,event: ListView.Selected):
+        print(event.item.name)
+        self.selected=event.item.name
 
     def on_mount(self) -> None:
         # Get config profiles
         path = DirectoryConfig.snapshots
         dir_list = os.listdir(path)
         for file in dir_list:
-            self.snapshots.append( ListItem(Label(file))  )
+            self.snapshots.append( ListItem(Label(file),name=file)  )
         if( len(self.snapshots) == 0 ):
             load_button=self.app.query_one("Landing #button-load-snapshot")
             load_button.disabled=True
+        else:
+            self.selected=dir_list[0]
+
         self.mutate_reactive(Snapshot.snapshots)
 
 
@@ -80,7 +89,16 @@ class Landing(Screen):
 
         if button_id == "button-quit":
             self.app.exit()
-        if button_id == "button-generate-new":
+        elif button_id == "button-load-snapshot":
+            profile=self.app.query_one("Landing #profile")
+            selected_config=profile.selected_config
+            
+            snapshot=self.app.query_one("Landing #history")
+            
+            self.app.post_message(ScreenFlowEvent( id="flow.push.load_snapshot",desc=f"Beginning load of [bold yellow]{snapshot.selected}[bold magenta]...", data={"selected_config":selected_config,"snapshot":snapshot.selected} ))
+
+
+        elif button_id == "button-generate-new":
             
             profile=self.app.query_one("Landing #profile")
             selected_config=profile.selected_config
