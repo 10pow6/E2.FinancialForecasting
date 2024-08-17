@@ -20,7 +20,8 @@ python -m venv venv
 source
 pip install -r requirements.txt
 ```
-5) Run either via `python main.py` or `wt_run.py` if you have new Windows Terminal
+5) Copy profile.json.sample to profile.json and update COOKIE & X-CSRFTOKEN values.  Update any forecasting configs from defaults if desired.
+6) Run either via `python main.py` or `wt_run.py` if you have new Windows Terminal
 
 # Linux
 This software has been designed to be cross compatible with Linux. Various helper files (IE source.bat, wt_run.bat) obviously won't work, but you should be able to run from a terminal no issue. 
