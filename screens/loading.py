@@ -13,11 +13,21 @@ import asyncio
 
 class Loading(Screen):
     def __init__(self, init_mode: str, init_msg: str, api_handler) -> None:
+        print("LOADING SCREEN ADDED")
         self.init_mode = init_mode
         self.init_msg = init_msg
         self.api_handler = api_handler
         self.tile_info = {}
         self.final_calc = []
+
+        # need to update this logic so it makes sense... keep in my we may load old snapshots.  need some naming format that captures the load =p. 
+        # probably calculated.snapshot-timestamp.json that cooresponds to either the thing we LOADED or the thing we generated.  
+        # right now end to end maps.  this will break naming convention wise on load
+        # probably if we are in "load mode", just overwrite this with the parsed out timestamp
+        now = datetime.datetime.now()
+        self.formatted_datetime = now.strftime("%Y%m%d%H%M%S")
+        
+
         self.start = timeit.default_timer()
         super().__init__()
 
@@ -87,11 +97,75 @@ class Loading(Screen):
         text_log.write("Completed processing T3.")
         executor.shutdown(wait=True)
 
-        with open("out.json", 'w') as file:
+
+        path = DirectoryConfig.calculated
+        filename = f"calculated.snapshot-{self.formatted_datetime}.json"
+
+        with open(path+"/"+filename, 'w') as file:
             json.dump(self.final_calc, file, indent=4)
 
+        text_log = self.query_one(RichLog)
+        text_log.write("Successfully wrote calculated file.")
         
         return True    
+
+    def on_mount(self) -> None:
+        ### BELOW LINE FOR DEBUG MODE WHILE I BUILD THIS OUT.
+        DEBUG_MODE_BYPASS_API_PULL=True
+        text_log = self.query_one(RichLog)
+        text_log.write("[bold magenta]"+self.init_msg)
+
+        if( not DEBUG_MODE_BYPASS_API_PULL ):
+            self.run_worker(self.call_apis(), exclusive=False)
+        elif( DEBUG_MODE_BYPASS_API_PULL ):
+            # we manually read a snapshot file and run the spent money
+            # flow to avoid excess API pulls.  This is essentially LOAD mode
+            # which will be written later :P
+            path = DirectoryConfig.snapshots
+            snapshot="snapshot-20240816193750.json"
+            with open(path+"/"+snapshot, 'r') as file:
+                self.tile_info = json.load(file)
+            self.run_worker(self.process_spend(), exclusive=False)
+        
+    def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
+            """Called when the worker state changes."""
+            if( event.worker.name=="tileprices_v2" and event.worker.result != None):
+                self.log(event)
+                self.log(event.worker.result)
+                
+                self.tile_info["countries"] = event.worker.result
+
+                text_log = self.query_one(RichLog)
+                text_log.write("Pulled data from tile statistics (valid for T1 & T2).")
+            elif( event.worker.name=="territory_prices" and event.worker.result != None):
+                self.log(event)
+                self.log(event.worker.result)
+                
+                self.tile_info["territories"] = event.worker.result
+
+                text_log = self.query_one(RichLog)
+                text_log.write("Pulled data from tile statistics (Territories).")
+            elif( event.worker.name=="process_spend" and event.worker.result != None):
+                total=0
+                for entry in self.final_calc:
+                    total+=entry["userSpend"]
+                print(total)
+                stop = timeit.default_timer()
+                print('>> Complete. Processing Time: ', stop - self.start)  
+            elif( event.worker.name=="call_apis" and event.worker.result != None):
+                #country_data = self.tile_info["countries"]
+                #territory_data = self.tile_info["territories"]
+                # Write Snapshot after API calls
+                path = DirectoryConfig.snapshots
+                
+                filename = f"snapshot-{self.formatted_datetime}.json"
+
+                with open(path+"/"+filename, 'w') as file:
+                    json.dump(self.tile_info, file, indent=4)
+
+                text_log = self.query_one(RichLog)
+                text_log.write("Successfully wrote snapshot file.")
+
 
     # Older code that has a textual worker spawn more textual workers
     # as this was asyncio, there was no CPU bump
@@ -164,61 +238,3 @@ class Loading(Screen):
 
         return True
     '''
-
-    def on_mount(self) -> None:
-        ### BELOW LINE FOR DEBUG MODE WHILE I BUILD THIS OUT.
-        DEBUG_MODE_BYPASS_API_PULL=True
-        text_log = self.query_one(RichLog)
-        text_log.write("[bold magenta]"+self.init_msg)
-
-        if( not DEBUG_MODE_BYPASS_API_PULL ):
-            self.run_worker(self.call_apis(), exclusive=False)
-        elif( DEBUG_MODE_BYPASS_API_PULL ):
-            # we manually read a snapshot file and run the spent money
-            # flow to avoid excess API pulls.  This is essentially LOAD mode
-            # which will be written later :P
-            path = DirectoryConfig.snapshots
-            snapshot="snapshot-20240816193750.json"
-            with open(path+"/"+snapshot, 'r') as file:
-                self.tile_info = json.load(file)
-            self.run_worker(self.process_spend(), exclusive=False)
-        
-    def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
-            """Called when the worker state changes."""
-            if( event.worker.name=="tileprices_v2" and event.worker.result != None):
-                self.log(event)
-                self.log(event.worker.result)
-                
-                self.tile_info["countries"] = event.worker.result
-
-                text_log = self.query_one(RichLog)
-                text_log.write("Pulled data from tile statistics (valid for T1 & T2).")
-            elif( event.worker.name=="territory_prices" and event.worker.result != None):
-                self.log(event)
-                self.log(event.worker.result)
-                
-                self.tile_info["territories"] = event.worker.result
-
-                text_log = self.query_one(RichLog)
-                text_log.write("Pulled data from tile statistics (Territories).")
-            elif( event.worker.name=="process_spend" and event.worker.result != None):
-                total=0
-                for entry in self.final_calc:
-                    total+=entry["userSpend"]
-                print(total)
-                stop = timeit.default_timer()
-                print('>> Complete. Processing Time: ', stop - self.start)  
-            elif( event.worker.name=="call_apis" and event.worker.result != None):
-                #country_data = self.tile_info["countries"]
-                #territory_data = self.tile_info["territories"]
-                # Write Snapshot after API calls
-                path = DirectoryConfig.snapshots
-                now = datetime.datetime.now()
-                formatted_datetime = now.strftime("%Y%m%d%H%M%S")
-                filename = f"snapshot-{formatted_datetime}.json"
-
-                with open(path+"/"+filename, 'w') as file:
-                    json.dump(self.tile_info, file, indent=4)
-
-                text_log = self.query_one(RichLog)
-                text_log.write("Successfully wrote snapshot file.")
