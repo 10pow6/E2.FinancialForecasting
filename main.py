@@ -7,6 +7,13 @@ from screens import Loading
 from screens.screenflow_event import ScreenFlowEvent
 
 from handlers.api_handler import APIHandler
+import os
+
+from statics import DirectoryConfig
+
+# QOL make dir if does not exist
+os.makedirs(os.path.dirname(DirectoryConfig.snapshots), exist_ok=True)
+os.makedirs(os.path.dirname(DirectoryConfig.calculated), exist_ok=True)
 
 api_handler = APIHandler()
 
