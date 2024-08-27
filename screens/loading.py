@@ -1,6 +1,7 @@
 from textual.app import ComposeResult
 from textual.screen import Screen
-from textual.widgets import LoadingIndicator, RichLog, Header, Footer
+from textual.widgets import LoadingIndicator, RichLog, Header, Footer, Button, Static
+from textual.containers import Center
 from textual.worker import Worker
 import json
 from statics import DirectoryConfig
@@ -37,6 +38,8 @@ class Loading(Screen):
 
     def compose(self) -> ComposeResult:
         yield Header()
+        with Center():
+            yield Button("Generate Report",id="reporting",variant="primary", disabled=True)
         yield LoadingIndicator()
         yield RichLog(highlight=True, markup=True)
         yield Footer()
@@ -175,6 +178,15 @@ class Loading(Screen):
                 
                 stop = timeit.default_timer()
                 text_log.write(f'Complete. Processing Time: {stop - self.start:.4f} seconds')
+
+                # processing complete next option
+                loading = self.query_one("Loading LoadingIndicator")
+                loading.visible = False
+                report_button = self.query_one("Loading Button")
+                report_button.disabled = False
+                report_button.visible = True
+
+
             elif( event.worker.name=="call_apis" and event.worker.result != None):
                 #country_data = self.tile_info["countries"]
                 #territory_data = self.tile_info["territories"]
