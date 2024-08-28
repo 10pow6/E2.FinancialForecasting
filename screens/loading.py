@@ -11,6 +11,7 @@ from helpers import spend_worker
 import numpy as np
 from concurrent.futures import ProcessPoolExecutor
 import asyncio
+from screens.screenflow_event import ScreenFlowEvent
 
 class Loading(Screen):
     def __init__(self, init_mode: str, init_msg: str, api_handler, snapshot_name=None) -> None:
@@ -19,6 +20,7 @@ class Loading(Screen):
         self.api_handler = api_handler
         self.tile_info = {}
         self.final_calc = []
+        self.aggregates = {}
         self.snapshot_name=snapshot_name
 
         # need to update this logic so it makes sense... keep in my we may load old snapshots.  need some naming format that captures the load =p. 
@@ -39,7 +41,7 @@ class Loading(Screen):
     def compose(self) -> ComposeResult:
         yield Header()
         with Center():
-            yield Button("Generate Report",id="reporting",variant="primary", disabled=True)
+            yield Button("Generate Report",id="button-report",variant="primary", disabled=True)
         yield LoadingIndicator()
         yield RichLog(highlight=True, markup=True)
         yield Footer()
@@ -131,7 +133,15 @@ class Loading(Screen):
             with open(path+"/"+snapshot, 'r') as file:
                 self.tile_info = json.load(file)
             self.run_worker(self.process_spend(), exclusive=False)
-        
+    
+    def on_button_pressed(self, event: Button.Pressed) -> None:
+        """Event handler called when a button is pressed."""
+        button_id = event.button.id
+
+        if button_id == "button-report":
+            self.app.post_message(ScreenFlowEvent( id="flow.push.run_report",desc=f"Generated Report", data={"final_calc":self.final_calc,"aggregates":self.aggregates} ))
+
+
     def on_worker_state_changed(self, event: Worker.StateChanged) -> None:
             """Called when the worker state changes."""
             if( event.worker.name=="tileprices_v2" and event.worker.result != None):
@@ -162,14 +172,17 @@ class Loading(Screen):
                 
                 # Calculate total userSpend
                 total_spend = np.sum(data['userSpend'])
+                self.aggregates["total_spend"] = total_spend
                 
                 # Calculate total tiles sold
                 total_tiles = np.sum(data['tilesSold'])
+                self.aggregates["total_tiles"] = total_tiles
                 
                 # Sum tilesSold by tier
                 unique_tiers = np.unique(data['tier'])
                 tier_tiles = {tier: np.sum(data['tilesSold'][data['tier'] == tier]) for tier in unique_tiers}
-                
+                self.aggregates["tier_tiles"] = tier_tiles
+
                 # Output results with formatted numbers
                 text_log.write(f"Total User Spend: ${total_spend:,.2f}")
                 text_log.write(f"Total Tiles Sold: {total_tiles:,}")

@@ -37,7 +37,18 @@ Loading {
     grid-rows: 2fr 1fr 4fr;
 }
 
-Loading #reporting{
+Loading #button-report{
     margin-top:2;
     visibility:hidden;
+}
+
+Report {
+    layout: grid;
+    grid-size: 1 2;
+    grid-rows: 1fr 6fr;
+}
+
+Report #static-report-header {
+    border:white;
+    text-align: center;
 }

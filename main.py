@@ -3,6 +3,7 @@ from textual.widgets import Header, Footer
 
 from screens import Landing
 from screens import Loading
+from screens import Report
 
 from screens.screenflow_event import ScreenFlowEvent
 
@@ -56,11 +57,12 @@ class ForecastApp(App):
             if( event_payload["action"]=="execute_api"):
                 api_handler.set_options(config_file=event_payload["data"]["selected_config"])
                 self.push_screen( Loading( init_mode=event.id, init_msg=event.desc, api_handler=api_handler ) )
-        if( event_payload["type"]=="flow" and event_payload["direction"]=="push" ):
             if( event_payload["action"]=="load_snapshot"):
                 api_handler.set_options(config_file=event_payload["data"]["selected_config"])
                 self.push_screen( Loading( init_mode=event.id, init_msg=event.desc, api_handler=api_handler,snapshot_name=event_payload["data"]["snapshot"] ) )
-
+            if( event_payload["action"]=="run_report"):
+                self.push_screen( Report( init_msg=event.desc, final_calc=event_payload["data"]["final_calc"], aggregates=event_payload["data"]["aggregates"], forecasting_config=api_handler.options["FORECASTING_CONFIG"] ) )
+                
 
 
 if __name__ == "__main__":
