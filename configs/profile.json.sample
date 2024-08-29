@@ -50,7 +50,7 @@
                 "EXP_FRAUD":0.20,
                 "EXP_BUGS":0.20,
                 "EXP_SALARIES":2500000,
-                "EXP_OPERATIONAL":550000,
+                "EXP_OPERATIONAL":1550000,
                 "EXP_ACQUISITIONS":1500000,
                 "EXP_TILE_UPGRADES":0
             },
@@ -61,7 +61,7 @@
                 "EXP_FRAUD":0.08,
                 "EXP_BUGS":0.08,
                 "EXP_SALARIES":6000000,
-                "EXP_OPERATIONAL":450000,
+                "EXP_OPERATIONAL":2450000,
                 "EXP_ACQUISITIONS":0,
                 "EXP_TILE_UPGRADES":0
             },
@@ -72,7 +72,7 @@
                 "EXP_FRAUD":0.045,
                 "EXP_BUGS":0.045,
                 "EXP_SALARIES":3000000,
-                "EXP_OPERATIONAL":450000,
+                "EXP_OPERATIONAL":2000000,
                 "EXP_ACQUISITIONS":0,
                 "EXP_TILE_UPGRADES":540000
             }
