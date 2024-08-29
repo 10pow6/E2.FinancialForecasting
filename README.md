@@ -6,6 +6,10 @@ This is tool is not meant as financial advice and financial decisions should not
 # What is this:
 This script produces basic financial modelling insights on E2's profitability.
 
+![Menu](doc-images/1.png "Menu")
+![Loading](doc-images/2.png "Loading")
+![Report](doc-images/3.png "Report")
+
 # Why is this useful:
 Forming insights about company health.
 
