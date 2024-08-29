@@ -50,7 +50,7 @@ class ForecastApp(App):
             "action":parsed[2],
             "data":event.data
         }
-        print(event_payload)
+        #print(event_payload)
         print( "======================================")
 
         if( event_payload["type"]=="flow" and event_payload["direction"]=="push" ):

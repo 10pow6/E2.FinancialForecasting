@@ -42,13 +42,26 @@ Loading #button-report{
     visibility:hidden;
 }
 
+/*
 Report {
     layout: grid;
-    grid-size: 1 2;
-    grid-rows: 1fr 6fr;
-}
+    grid-size: 1 3;
+    grid-rows: 1fr 2fr 2fr;
+}*/
 
 Report #static-report-header {
     border:white;
     text-align: center;
+}
+Report Tabs {
+    dock: top;
+}
+
+Report #label-projection {
+    border:white;
+    margin:1 1;
+    width: 100%;
+    background: $panel;
+    border: tall $primary;
+    content-align: left middle;
 }

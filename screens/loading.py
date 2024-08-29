@@ -139,7 +139,7 @@ class Loading(Screen):
         button_id = event.button.id
 
         if button_id == "button-report":
-            self.app.post_message(ScreenFlowEvent( id="flow.push.run_report",desc=f"Generated Report", data={"final_calc":self.final_calc,"aggregates":self.aggregates} ))
+            self.app.post_message(ScreenFlowEvent( id="flow.push.run_report",desc=f"Generated Report: {self.snapshot_name}", data={"final_calc":self.final_calc,"aggregates":self.aggregates} ))
 
 
     def on_worker_state_changed(self, event: Worker.StateChanged) -> None:

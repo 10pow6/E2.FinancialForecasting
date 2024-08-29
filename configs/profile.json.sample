@@ -34,43 +34,47 @@
         "DYNAMIC":{
             "YEAR_1": {
                 "COMMENTS":["2020-2021","Initial release"],
-                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.4,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.5,
                 "REV_SKINS":0.0,
-                "EXP_FRAUD":0.15,
-                "EXP_BUGS":0.15,
-                "EXP_SALARIES":500000,
+                "EXP_FRAUD":0.35,
+                "EXP_BUGS":0.25,
+                "EXP_SALARIES":700000,
                 "EXP_OPERATIONAL":100000,
-                "EXP_ACQUISITIONS":0
+                "EXP_ACQUISITIONS":0,
+                "EXP_TILE_UPGRADES":0
             },
             "YEAR_2": {
                 "COMMENTS":["2021-2022","T2 Release","DRONE Acquisition"],
-                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.4,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.3,
                 "REV_SKINS":0.0,
-                "EXP_FRAUD":0.1,
-                "EXP_BUGS":0.1,
+                "EXP_FRAUD":0.20,
+                "EXP_BUGS":0.20,
                 "EXP_SALARIES":2500000,
-                "EXP_OPERATIONAL":3500000,
-                "EXP_ACQUISITIONS":1500000
+                "EXP_OPERATIONAL":550000,
+                "EXP_ACQUISITIONS":1500000,
+                "EXP_TILE_UPGRADES":0
             },
             "YEAR_3": {
                 "COMMENTS":["2022-2023","AIR Gone"],
-                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.15,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.15,
                 "REV_SKINS":0.0,
-                "EXP_FRAUD":0.025,
-                "EXP_BUGS":0.025,
-                "EXP_SALARIES":4500000,
+                "EXP_FRAUD":0.08,
+                "EXP_BUGS":0.08,
+                "EXP_SALARIES":6000000,
                 "EXP_OPERATIONAL":450000,
-                "EXP_ACQUISITIONS":0
+                "EXP_ACQUISITIONS":0,
+                "EXP_TILE_UPGRADES":0
             },
             "YEAR_4": {
                 "COMMENTS":["2023-2024","T3 Release", "DRONE Team leaves","It puts the lotion on its skin (Skin functionality released)"],
-                "REV_TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
                 "REV_SKINS":0.0,
-                "EXP_FRAUD":0.025,
-                "EXP_BUGS":0.025,
-                "EXP_SALARIES":2500000,
+                "EXP_FRAUD":0.045,
+                "EXP_BUGS":0.045,
+                "EXP_SALARIES":3000000,
                 "EXP_OPERATIONAL":450000,
-                "EXP_ACQUISITIONS":0
+                "EXP_ACQUISITIONS":0,
+                "EXP_TILE_UPGRADES":540000
             }
         },
         "FLAT": {
