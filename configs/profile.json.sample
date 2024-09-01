@@ -36,49 +36,65 @@
                 "COMMENTS":["2020-2021","Initial release"],
                 "TOTAL_TILE_SALE_ALLOCATION_PERC":0.5,
                 "REV_SKINS":0.0,
-                "EXP_FRAUD":0.35,
-                "EXP_BUGS":0.25,
+                "REV_HOLOBUILDING":0.0,
+                "REV_INT":0.025,
+                "REV_OTHER":0,
+                "EXP_TAXES":0.25,
+                "EXP_FRAUD":0.15,
+                "EXP_BUGS":0.20,
                 "EXP_SALARIES":700000,
                 "EXP_OPERATIONAL":100000,
                 "EXP_ACQUISITIONS":0,
-                "EXP_TILE_UPGRADES":0
+                "EXP_TILE_UPGRADES":0,
+                "EXP_OTHER":0
             },
             "YEAR_2": {
                 "COMMENTS":["2021-2022","T2 Release","DRONE Acquisition"],
                 "TOTAL_TILE_SALE_ALLOCATION_PERC":0.3,
                 "REV_SKINS":0.0,
-                "EXP_FRAUD":0.20,
-                "EXP_BUGS":0.20,
+                "REV_HOLOBUILDING":550000.0,
+                "REV_OTHER":0,
+                "EXP_FRAUD":0.10,
+                "EXP_BUGS":0.15,
                 "EXP_SALARIES":2500000,
                 "EXP_OPERATIONAL":1550000,
                 "EXP_ACQUISITIONS":1500000,
-                "EXP_TILE_UPGRADES":0
+                "EXP_TILE_UPGRADES":0,
+                "EXP_OTHER":0
             },
             "YEAR_3": {
                 "COMMENTS":["2022-2023","AIR Gone"],
                 "TOTAL_TILE_SALE_ALLOCATION_PERC":0.15,
                 "REV_SKINS":0.0,
+                "REV_OTHER":0,
+                "REV_HOLOBUILDING":250000.0,
                 "EXP_FRAUD":0.08,
                 "EXP_BUGS":0.08,
-                "EXP_SALARIES":6000000,
+                "EXP_SALARIES":4000000,
                 "EXP_OPERATIONAL":2450000,
                 "EXP_ACQUISITIONS":0,
-                "EXP_TILE_UPGRADES":0
+                "EXP_TILE_UPGRADES":0,
+                "EXP_OTHER":0
             },
             "YEAR_4": {
-                "COMMENTS":["2023-2024","T3 Release", "DRONE Team leaves","It puts the lotion on its skin (Skin functionality released)"],
+                "COMMENTS":["2023-2024","T3 Release", "DRONE Team leaves","It puts the lotion on its skin (Skin functionality released)", "Tony 25% bought out"],
                 "TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
-                "REV_SKINS":0.0,
+                "REV_SKINS":1350000.0,
+                "REV_HOLOBUILDING":10000.0,
+                "REV_OTHER":0,
                 "EXP_FRAUD":0.045,
                 "EXP_BUGS":0.045,
                 "EXP_SALARIES":3000000,
                 "EXP_OPERATIONAL":2000000,
                 "EXP_ACQUISITIONS":0,
-                "EXP_TILE_UPGRADES":540000
+                "EXP_TILE_UPGRADES":540000,
+                "EXP_OTHER":6000000
             }
         },
         "FLAT": {
             "REV_FEES":0.06,
+            "REV_INTEREST":0.025,
+            "EXP_TAXES":0.25,
             "EXP_LIT":0.035,
             "EXP_REF":0.1125
         }

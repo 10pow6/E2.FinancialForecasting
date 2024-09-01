@@ -22,44 +22,60 @@ class Report(Screen):
             year_allocation=self.aggregates["total_spend"] * year_data["TOTAL_TILE_SALE_ALLOCATION_PERC"]
 
             year_rev_fees=year_allocation * forecasting_config["FLAT"]["REV_FEES"]
+            year_rev_interest=year_allocation * forecasting_config["FLAT"]["REV_INTEREST"]
             year_rev_skins=year_data["REV_SKINS"]
+            year_rev_other=year_data["REV_OTHER"]
+            year_rev_holobuilding=year_data["REV_HOLOBUILDING"]
+            
             
             year_exp_fraud=year_allocation * year_data["EXP_FRAUD"]
             year_exp_bugs=year_allocation * year_data["EXP_BUGS"]
+            year_exp_taxes=year_allocation * forecasting_config["FLAT"]["EXP_TAXES"]
             year_exp_lit=year_allocation * forecasting_config["FLAT"]["EXP_LIT"]
             year_exp_ref=year_allocation * forecasting_config["FLAT"]["EXP_REF"]
             year_exp_operational=year_data["EXP_OPERATIONAL"]
             year_exp_tile_upgrades=year_data["EXP_TILE_UPGRADES"]
             year_exp_salaries=year_data["EXP_SALARIES"]
             year_exp_acquisitions=year_data["EXP_ACQUISITIONS"]
+            year_exp_other=year_data["EXP_OTHER"]
             
 
             #healt calc
             health=(year_allocation
             + year_rev_skins
             + year_rev_fees
+            + year_rev_interest
+            + year_rev_other
+            + year_rev_holobuilding
             - year_exp_fraud
             - year_exp_bugs
+            - year_exp_taxes
             - year_exp_salaries
             - year_exp_operational
             - year_exp_acquisitions
             - year_exp_tile_upgrades
             - year_exp_lit
             - year_exp_ref
+            - year_exp_other
             )
 
             projection_data = {
                 "allocation": year_allocation,
                 "rev_skins": year_rev_skins,
                 "rev_fees": year_rev_fees,
+                "rev_other": year_rev_other,
+                "rev_holobuilding": year_rev_holobuilding,
+                "rev_interest": year_rev_interest,
                 "exp_fraud": year_exp_fraud,
                 "exp_bugs": year_exp_bugs,
+                "exp_taxes": year_exp_taxes,
                 "exp_salaries": year_exp_salaries,
                 "exp_operational": year_exp_operational,
                 "exp_acquisitions": year_exp_acquisitions,
                 "exp_tile_upgrades": year_exp_tile_upgrades,
                 "exp_lit": year_exp_lit,
                 "exp_ref": year_exp_ref,
+                "exp_other":year_exp_other,
                 "health": health
             }
             projection_text = self.create_projection_text(projection_data)
@@ -84,14 +100,19 @@ class Report(Screen):
             (+) Player spend on tiles: {self.format_currency(data['allocation'])}
             (+) Skin Sales: {self.format_currency(data['rev_skins'])}
             (+) Fees: {self.format_currency(data['rev_fees'])}
+            (+) Holobuildings: {self.format_currency(data['rev_holobuilding'])}
+            (+) Interest: {self.format_currency(data['rev_interest'])}
+            (+) Other: {self.format_currency(data['rev_other'])}
             (-) Fraud: {self.format_currency(data['exp_fraud'])}
             (-) Bugs: {self.format_currency(data['exp_bugs'])}
+            (-) Taxes: {self.format_currency(data['exp_taxes'])}
             (-) Salaries: {self.format_currency(data['exp_salaries'])}
             (-) Operational: {self.format_currency(data['exp_operational'])}
             (-) Acquisitions: {self.format_currency(data['exp_acquisitions'])}
             (-) Tile Upgrades (Reducer): {self.format_currency(data['exp_tile_upgrades'])}
             (-) Lit: {self.format_currency(data['exp_lit'])}
             (-) Ref Codes: {self.format_currency(data['exp_ref'])}
+            (-) Other: {self.format_currency(data['exp_other'])}
             =====================================
             Health: {self.format_currency(data['health'])}
         """
