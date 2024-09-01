@@ -1,4 +1,4 @@
-Open access for all. If you like this code, consider donating.
+Open access for all. If you like this code, consider supporting us.
 
 # General Disclaimer
 This is tool is not meant as financial advice and financial decisions should not be made with this tool. This tool takes into consideration the only metric that is known (tile sales & tile price algorithm) and tries to make an educated guess based on various assumptions & parameters of financial burn across years. This project was made for fun.
