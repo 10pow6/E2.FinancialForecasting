@@ -110,7 +110,8 @@ class APIHandler:
                     essFinal,
                     essDiscountRate,
                     eusdDiscountRate,
-                    stakeReq,
+                    essStakeReq,
+                    eusdStakeReq,
                     final,
                     value
                 }}
