@@ -17,7 +17,7 @@ mdit-py-plugins==0.4.1
 mdurl==0.1.2
 msgpack==1.0.8
 multidict==6.0.5
-numpy==2.0.1
+numpy
 Pygments==2.18.0
 rich==13.7.1
 sniffio==1.3.1
