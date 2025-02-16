@@ -84,7 +84,7 @@
             },
             "YEAR_4": {
                 "COMMENTS":["2023-2024","T3 Release", "DRONE Team leaves","It puts the lotion on its skin (Skin functionality released)", "25% buy out of shares (6m other)", "LIT pretty much removed mid year ish", "raiding per month cost stated by Shane 15k"],
-                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.03,
                 "REV_SKINS":1350000.0,
                 "REV_HOLOBUILDING":10000.0,
                 "REV_OTHER":0,
@@ -100,7 +100,7 @@
             },
             "YEAR_5": {
                 "COMMENTS":["'gambling' spin to win mechanic... IE discount of tile purchase; conservative 25% discount of tile purchase", "turnover of team", "e2v1 backend increases"],
-                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.02,
                 "REV_SKINS":1350000.0,
                 "REV_HOLOBUILDING":3000.0,
                 "REV_OTHER":0,
