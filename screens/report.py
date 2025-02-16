@@ -28,10 +28,11 @@ class Report(Screen):
             year_rev_holobuilding=year_data["REV_HOLOBUILDING"]
             
             
+            year_exp_spin2win=year_allocation * year_data["EXP_SPIN2WIN"]
             year_exp_fraud=year_allocation * year_data["EXP_FRAUD"]
             year_exp_bugs=year_allocation * year_data["EXP_BUGS"]
             year_exp_taxes=year_allocation * forecasting_config["FLAT"]["EXP_TAXES"]
-            year_exp_lit=year_allocation * forecasting_config["FLAT"]["EXP_LIT"]
+            year_exp_lit=year_allocation * year_data["EXP_LIT"]
             year_exp_ref=year_allocation * forecasting_config["FLAT"]["EXP_REF"]
             year_exp_operational=year_data["EXP_OPERATIONAL"]
             year_exp_tile_upgrades=year_data["EXP_TILE_UPGRADES"]
@@ -56,6 +57,7 @@ class Report(Screen):
             - year_exp_tile_upgrades
             - year_exp_lit
             - year_exp_ref
+            - year_exp_spin2win
             - year_exp_other
             )
 
@@ -75,6 +77,7 @@ class Report(Screen):
                 "exp_tile_upgrades": year_exp_tile_upgrades,
                 "exp_lit": year_exp_lit,
                 "exp_ref": year_exp_ref,
+                "exp_spin2win": year_exp_spin2win,
                 "exp_other":year_exp_other,
                 "health": health
             }
@@ -111,6 +114,7 @@ class Report(Screen):
             (-) Acquisitions: {self.format_currency(data['exp_acquisitions'])}
             (-) Tile Upgrades (Reducer): {self.format_currency(data['exp_tile_upgrades'])}
             (-) Lit: {self.format_currency(data['exp_lit'])}
+            (-) Spin2win: {self.format_currency(data['exp_spin2win'])}
             (-) Ref Codes: {self.format_currency(data['exp_ref'])}
             (-) Other: {self.format_currency(data['exp_other'])}
             =====================================

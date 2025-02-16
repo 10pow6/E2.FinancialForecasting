@@ -30,7 +30,7 @@
         }
     },
     "FORECASTING_CONFIG": {
-        "YEARS":4,
+        "YEARS":5,
         "DYNAMIC":{
             "YEAR_1": {
                 "COMMENTS":["2020-2021","Initial release"],
@@ -46,7 +46,9 @@
                 "EXP_OPERATIONAL":100000,
                 "EXP_ACQUISITIONS":0,
                 "EXP_TILE_UPGRADES":0,
-                "EXP_OTHER":0
+                "EXP_OTHER":0,
+                "EXP_LIT":0.035,
+                "EXP_SPIN2WIN":0
             },
             "YEAR_2": {
                 "COMMENTS":["2021-2022","T2 Release","DRONE Acquisition"],
@@ -60,7 +62,9 @@
                 "EXP_OPERATIONAL":1550000,
                 "EXP_ACQUISITIONS":1500000,
                 "EXP_TILE_UPGRADES":0,
-                "EXP_OTHER":0
+                "EXP_OTHER":0,
+                "EXP_LIT":0.035,
+                "EXP_SPIN2WIN":0
             },
             "YEAR_3": {
                 "COMMENTS":["2022-2023","AIR Gone"],
@@ -74,10 +78,12 @@
                 "EXP_OPERATIONAL":2450000,
                 "EXP_ACQUISITIONS":0,
                 "EXP_TILE_UPGRADES":0,
-                "EXP_OTHER":0
+                "EXP_OTHER":0,
+                "EXP_LIT":0.035,
+                "EXP_SPIN2WIN":0
             },
             "YEAR_4": {
-                "COMMENTS":["2023-2024","T3 Release", "DRONE Team leaves","It puts the lotion on its skin (Skin functionality released)", "25% buy out of shares (6m other)"],
+                "COMMENTS":["2023-2024","T3 Release", "DRONE Team leaves","It puts the lotion on its skin (Skin functionality released)", "25% buy out of shares (6m other)", "LIT pretty much removed mid year ish", "raiding per month cost stated by Shane 15k"],
                 "TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
                 "REV_SKINS":1350000.0,
                 "REV_HOLOBUILDING":10000.0,
@@ -85,17 +91,34 @@
                 "EXP_FRAUD":0.045,
                 "EXP_BUGS":0.045,
                 "EXP_SALARIES":3000000,
-                "EXP_OPERATIONAL":2000000,
+                "EXP_OPERATIONAL":2180000,
                 "EXP_ACQUISITIONS":0,
                 "EXP_TILE_UPGRADES":540000,
-                "EXP_OTHER":6000000
+                "EXP_OTHER":6000000,
+                "EXP_LIT":0.01,
+                "EXP_SPIN2WIN":0
+            },
+            "YEAR_5": {
+                "COMMENTS":["'gambling' spin to win mechanic... IE discount of tile purchase; conservative 25% discount of tile purchase", "turnover of team", "e2v1 backend increases"],
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.05,
+                "REV_SKINS":1350000.0,
+                "REV_HOLOBUILDING":3000.0,
+                "REV_OTHER":0,
+                "EXP_FRAUD":0.045,
+                "EXP_BUGS":0.045,
+                "EXP_SALARIES":2000000,
+                "EXP_OPERATIONAL":2500000,
+                "EXP_ACQUISITIONS":0,
+                "EXP_TILE_UPGRADES":540000,
+                "EXP_OTHER":0,
+                "EXP_LIT":0,
+                "EXP_SPIN2WIN":0.25
             }
         },
         "FLAT": {
             "REV_FEES":0.06,
             "REV_INTEREST":0.025,
             "EXP_TAXES":0.25,
-            "EXP_LIT":0.035,
             "EXP_REF":0.1125
         }
     }
