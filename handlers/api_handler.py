@@ -16,7 +16,14 @@ def async_retry_with_backoff(max_retries, max_backoff, backoff_factor, product_c
                 try:
                     return await func(self, *args, **kwargs)
                 except (httpx.HTTPError, httpx.RequestError) as e:
-                    print(f"Error: {e}")
+                    print(f"Error: {type(e).__name__}: {e}")
+                    try:
+                        print(f"  Request: {e.request.method} {e.request.url}")
+                    except RuntimeError:
+                        pass  # request not set on this exception
+                    if isinstance(e, httpx.HTTPStatusError):
+                        print(f"  Status: {e.response.status_code}")
+                        print(f"  Response: {e.response.text[:500]}")
                     if backoff < max_backoff:
                         sleep_time = backoff + random.uniform(0, backoff_factor * backoff)
                         print(f"Retrying in {sleep_time:.2f} seconds...")
@@ -58,7 +65,7 @@ class APIHandler:
 
     @async_retry_with_backoff(max_retries=5, max_backoff=60, backoff_factor=0.5, product_call=False)
     async def call_api(self, method="GET", params=None, json=None, data=None,url=None,headers=None):
-        async with httpx.AsyncClient() as client:
+        async with httpx.AsyncClient(timeout=httpx.Timeout(30.0, connect=10.0)) as client:
             response = await client.request(method, url, params=params, json=json, data=data, headers=headers)
         response.raise_for_status()
         

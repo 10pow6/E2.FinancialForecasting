@@ -6,7 +6,7 @@
             "X-CSRFTOKEN":"REDACT_NEVER_VERSION_CONTROL_IN_THIS_FILE"
         },
         "ENDPOINTS": {
-            "realtime_url":"https://r.earth2.io/",
+            "r_url":"https://r.earth2.io/",
             "graphql_url":"https://app.earth2.io/graphql",
             "v2_url":"https://app.earth2.io/api/v2/"
         },
@@ -30,11 +30,11 @@
         }
     },
     "FORECASTING_CONFIG": {
-        "YEARS":5,
+        "YEARS":6,
         "DYNAMIC":{
             "YEAR_1": {
                 "COMMENTS":["2020-2021","Initial release"],
-                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.5,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.6,
                 "REV_SKINS":0.0,
                 "REV_HOLOBUILDING":0.0,
                 "REV_INT":0.025,
@@ -52,7 +52,7 @@
             },
             "YEAR_2": {
                 "COMMENTS":["2021-2022","T2 Release","DRONE Acquisition"],
-                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.3,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.4,
                 "REV_SKINS":0.0,
                 "REV_HOLOBUILDING":550000.0,
                 "REV_OTHER":0,
@@ -100,8 +100,8 @@
             },
             "YEAR_5": {
                 "COMMENTS":["'gambling' spin to win mechanic... IE discount of tile purchase; conservative 25% discount of tile purchase", "turnover of team", "e2v1 backend increases"],
-                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.02,
-                "REV_SKINS":1350000.0,
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.015,
+                "REV_SKINS":5350000.0,
                 "REV_HOLOBUILDING":3000.0,
                 "REV_OTHER":0,
                 "EXP_FRAUD":0.045,
@@ -110,6 +110,22 @@
                 "EXP_OPERATIONAL":2500000,
                 "EXP_ACQUISITIONS":0,
                 "EXP_TILE_UPGRADES":540000,
+                "EXP_OTHER":0,
+                "EXP_LIT":0,
+                "EXP_SPIN2WIN":0.25
+            },
+            "YEAR_6": {
+                "COMMENTS":["2026... not much new"],
+                "TOTAL_TILE_SALE_ALLOCATION_PERC":0.005,
+                "REV_SKINS":0,
+                "REV_HOLOBUILDING":0,
+                "REV_OTHER":0,
+                "EXP_FRAUD":0.045,
+                "EXP_BUGS":0.045,
+                "EXP_SALARIES":2000000,
+                "EXP_OPERATIONAL":2500000,
+                "EXP_ACQUISITIONS":0,
+                "EXP_TILE_UPGRADES":340000,
                 "EXP_OTHER":0,
                 "EXP_LIT":0,
                 "EXP_SPIN2WIN":0.25
